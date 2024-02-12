@@ -1,0 +1,13 @@
+// command: htop
+bar = function(n, length = 25)
+    return "<color=#21bcff>" + ("#" * ceil(n / 100 * length)) + "</color><color=#032e41>" + ("-" * (length - ceil(n / 100 * length))) + "</color>"
+end function
+while true
+    current = {"tasks":[], "loads":{"cpu":0, "mem":0}}
+    for line in get_shell.host_computer.show_procs.split("\n")[1:]
+        task = line.split(" ")
+        current.loads = {"cpu":current.loads.cpu + task[2][:-1].val, "mem":current.loads.mem + task[3][:-1].val}
+        if task[0] == "root" then current.tasks.push(["<color=#ff4b4b>" + task[0] + "</color>", "<color=#20ff98>" + task[1] + "</color>", "<color=#21bcff>" + task[2] + "</color>", "<color=#21bcff>" + task[3] + "</color>", "<color=#baff50>" + task[4] + "</color>"].join(" ")) else current.tasks.push(["<color=#fbfbfb>" + task[0] + "</color>", "<color=#20ff98>" + task[1] + "</color>", "<color=#21bcff>" + task[2] + "</color>", "<color=#21bcff>" + task[3] + "</color>", "<color=#baff50>" + task[4] + "</color>"].join(" "))
+    end for
+    wait((not print("<color=#fbfbfb>tasks: " + current.tasks.len + "</color>\n<color=#fbfbfb>cpu_usage: [</color>" + bar(current.loads.cpu) + "<color=#fbfbfb>]==[ </color><color=#21bcff>" + current.loads.cpu + "%</color> <color=#fbfbfb>]</color>\n<color=#fbfbfb>mem_usage: [</color>" + bar(current.loads.mem) + "<color=#fbfbfb>]==[ </color><color=#21bcff>" + current.loads.mem + "%</color> <color=#fbfbfb>]</color>\n" + format_columns((["<color=#9d9d9d>USER</color> <color=#9d9d9d>PID</color> <color=#9d9d9d>CPU</color> <color=#9d9d9d>MEM</color> <color=#9d9d9d>COLOR</color>"] + current.tasks).join("\n")), true)) - 0.99)
+end while
